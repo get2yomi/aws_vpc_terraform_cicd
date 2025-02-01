@@ -25,10 +25,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Export Terraform Variables
+        run: |
+          echo "TF_VAR_aws_region=${{ secrets.TF_VAR_vpc_cidr_block }}" >> $GITHUB_ENV
+          echo "TF_VAR_pub_cidr_block=${{ secrets.TF_VAR_pub_cidr_block_a}}" >> $GITHUB_ENV
+          echo "TF_VAR_pub_cidr_block_b=${{ secrets.TF_VAR_pub_cidr_block_b}}" >> $GITHUB_ENV
+
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Terraform Plan
+      - name: Terraform Plan # to destroy my resources.
         run: terraform plan -destroy -out=tfplan
 
       - name: Terraform destroy
